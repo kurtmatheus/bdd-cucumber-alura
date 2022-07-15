@@ -21,9 +21,21 @@ public class LeiloesPage {
 		driver.get(PAGE_URL);
 	}
 
-	public boolean existe(String nomeProduto, String valor, String usuario) {
-		return driver.getCurrentUrl().endsWith("/leiloes") && driver.getPageSource().contains(nomeProduto) && 
-				driver.getPageSource().contains(valor);
+	public boolean existe(String nome, String valor, String data, String usuario) {
+		return driver.getPageSource().contains(nome) && 
+				driver.getPageSource().contains(valor) &&
+				 driver.getPageSource().contains(data) &&
+				 driver.getPageSource().contains(usuario);
+	}
+	
+	public boolean estaNaPaginaDeLeiloes() {
+		this.esperaCarregarPaginaDeLeiloes();
+		return this.driver.getCurrentUrl().endsWith("/leiloes");
+	}
+	
+	public void esperaCarregarPaginaDeLeiloes() {
+		WebDriverWait wait = new WebDriverWait(driver,2);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'Todos leilões')]")));
 	}
 
 	public NovoLeilaoPage visitaPaginaParaCriarUmNovoLeilao() {
@@ -76,4 +88,5 @@ public class LeiloesPage {
 				By.xpath("//table[@class='table table-hover']/tbody/tr/td[contains(text(),'" +donoDoLeilao+ "')]/following-sibling::td/a"));
 		return href.getText().contains("editar");
 	}
+	
 }
